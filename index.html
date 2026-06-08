@@ -159,19 +159,35 @@
 		</div>
 
 		<script>
-			(function() {
-				// Solo mostrar en iOS Safari cuando NO está instalada como PWA
-				var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-				var isInStandaloneMode = ('standalone' in navigator) && navigator.standalone;
+			window.addEventListener('DOMContentLoaded', function() {
+				var banner = document.getElementById('ios-install-banner');
+				if (!banner) return;
+
+				// Detectar iOS: iPhone/iPod + iPad (iOS 13+ reporta MacIntel con maxTouchPoints > 1)
+				var ua = navigator.userAgent;
+				var isIphone = /iphone|ipod/i.test(ua);
+				var isIpad = /ipad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+				var isIos = isIphone || isIpad;
+
+				// No mostrar si ya está instalada como PWA (modo standalone)
+				var isStandalone = ('standalone' in navigator) && navigator.standalone;
+
+				// No mostrar si el usuario ya lo cerró esta sesión
 				var dismissed = sessionStorage.getItem('iosBannerDismissed');
-				if (isIos && !isInStandaloneMode && !dismissed) {
-					document.getElementById('ios-install-banner').style.display = 'block';
+
+				if (isIos && !isStandalone && !dismissed) {
+					banner.style.display = 'block';
 				}
-				// Al cerrar el banner, recordarlo en la sesión
-				document.getElementById('ios-install-banner').querySelector('button').addEventListener('click', function() {
-					sessionStorage.setItem('iosBannerDismissed', '1');
-				});
-			})();
+
+				// Botón cerrar
+				var btn = banner.querySelector('button');
+				if (btn) {
+					btn.addEventListener('click', function() {
+						banner.style.display = 'none';
+						sessionStorage.setItem('iosBannerDismissed', '1');
+					});
+				}
+			});
 		</script>
 		
 
