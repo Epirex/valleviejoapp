@@ -1,0 +1,36 @@
+{
+  "name": "Valle Viejo Turismo",
+  "short_name": "Valle Viejo",
+  "description": "Guía turística de Valle Viejo - Gastronomía, Hospedaje, Turismo y más",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2e7d32",
+  "orientation": "portrait",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "assets/titulovertical2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/titulovertical2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/fondoinicionuevo.jpg",
+      "sizes": "1079x1629",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Pantalla de inicio"
+    }
+  ],
+  "categories": ["travel", "lifestyle"],
+  "prefer_related_applications": false
+}
