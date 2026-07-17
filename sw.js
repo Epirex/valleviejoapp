@@ -1,5 +1,5 @@
 // Valle Viejo Turismo - Service Worker
-const CACHE_NAME = 'valleviejo-v1';
+const CACHE_NAME = 'valleviejo-v2';
 
 // Recursos que se cachean al instalar el SW (app shell)
 const PRECACHE_ASSETS = [
