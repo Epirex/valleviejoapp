@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 		<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 		<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 		<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -12,24 +12,47 @@
 			<meta name="author" content="Esteban Guzzo" />
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 
-			<!-- PWA: Manifest -->
+			<!-- ═══════════════════════════════════════════════ -->
+			<!-- PWA - Progressive Web App                       -->
+			<!-- ═══════════════════════════════════════════════ -->
 			<link rel="manifest" href="manifest.json">
 
-			<!-- PWA: iOS / Safari -->
+			<!-- Tema de color (barra del navegador) -->
+			<meta name="theme-color" content="#2d7a3a">
+			<meta name="description" content="Turismo en Valle Viejo, Catamarca. Descubrí alojamientos, gastronomía, actividades y más." />
+
+			<!-- iOS / Safari meta tags -->
 			<meta name="apple-mobile-web-app-capable" content="yes">
-			<meta name="apple-mobile-web-app-status-bar-style" content="default">
+			<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 			<meta name="apple-mobile-web-app-title" content="Valle Viejo">
-			<link rel="apple-touch-icon" href="assets/titulovertical2.png">
 
-			<!-- PWA: Android / Chrome -->
-			<meta name="mobile-web-app-capable" content="yes">
-			<meta name="theme-color" content="#2e7d32">
+			<!-- Iconos para Apple (iOS no usa el manifest) -->
+			<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+			<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
 
-			<!-- PWA: Descripción general -->
-			<meta name="description" content="Guía turística de Valle Viejo - Gastronomía, Hospedaje, Turismo y más">
+			<!-- Icono estándar para navegadores / favoritos -->
+			<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+			<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+
+			<!-- Registro del Service Worker -->
+			<script>
+				if ('serviceWorker' in navigator) {
+					window.addEventListener('load', function () {
+						navigator.serviceWorker.register('/valleviejoapp/sw.js', { scope: '/valleviejoapp/' })
+							.then(function (reg) {
+								console.log('[PWA] Service Worker registrado. Scope:', reg.scope);
+							})
+							.catch(function (err) {
+								console.error('[PWA] Error al registrar el Service Worker:', err);
+							});
+					});
+				}
+			</script>
+			<!-- ═══════════════════════════════════════════════ -->
+
 
 			<!-- LOAD JQUERY LIBRARY -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+			<script src="jquery.js"></script>
 			
 			<!-- LOADING FONTS AND ICONS -->
 			<link href="https://fonts.googleapis.com/css?family=Roboto:400&display=swap" rel="stylesheet" property="stylesheet" media="all" type="text/css" >
@@ -108,142 +131,61 @@
 		</head>
 		
 		<body style="margin: 0px;">
-
-		<!-- Banner de instalación iOS -->
-		<div id="ios-install-banner" style="
-			display: none;
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			z-index: 99999;
-			background: #1b5e20;
-			color: #fff;
-			font-family: -apple-system, Roboto, sans-serif;
-			padding: 14px 16px 28px;
-			box-shadow: 0 -3px 12px rgba(0,0,0,0.35);
-			text-align: center;
-			border-radius: 16px 16px 0 0;
-		">
-			<button onclick="document.getElementById('ios-install-banner').style.display='none'" style="
-				position: absolute;
-				top: 10px;
-				right: 14px;
-				background: none;
-				border: none;
-				color: #a5d6a7;
-				font-size: 22px;
-				cursor: pointer;
-				line-height: 1;
-			">✕</button>
-			<img src="assets/titulovertical2.png" alt="Valle Viejo" style="height:42px;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;">
-			<p style="margin:0 0 6px;font-size:15px;font-weight:600;">Instalá Valle Viejo Turismo</p>
-			<p style="margin:0 0 10px;font-size:13px;color:#c8e6c9;line-height:1.4;">
-				Tocá <strong>
-				<svg style="vertical-align:middle;margin:0 2px;" width="18" height="18" viewBox="0 0 50 50" fill="#c8e6c9">
-					<path d="M30.3 8.7l-4.8-4.8c-.3-.3-.7-.3-1 0l-4.8 4.8c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0L24 7.4V32c0 .6.4 1 1 1s1-.4 1-1V7.4l2.9 2.7c.2.2.5.3.7.3.3 0 .5-.1.7-.3.4-.4.4-1 0-1.4z"/>
-					<path d="M38 19H32v2h6v24H12V21h6v-2h-6c-1.1 0-2 .9-2 2v24c0 1.1.9 2 2 2h26c1.1 0 2-.9 2-2V21c0-1.1-.9-2-2-2z"/>
-				</svg>
-				</strong> y luego <strong>"Agregar a inicio"</strong>
-			</p>
-			<div style="
-				width:28px;height:14px;
-				border-left:14px solid transparent;
-				border-right:14px solid transparent;
-				border-top:14px solid #1b5e20;
-				position:absolute;
-				bottom:-14px;
-				left:50%;
-				transform:translateX(-50%);
-			"></div>
-		</div>
-
-		<script>
-			window.addEventListener('DOMContentLoaded', function() {
-				var banner = document.getElementById('ios-install-banner');
-				if (!banner) return;
-
-				// Detectar iOS: iPhone/iPod + iPad (iOS 13+ reporta MacIntel con maxTouchPoints > 1)
-				var ua = navigator.userAgent;
-				var isIphone = /iphone|ipod/i.test(ua);
-				var isIpad = /ipad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-				var isIos = isIphone || isIpad;
-
-				// No mostrar si ya está instalada como PWA (modo standalone)
-				var isStandalone = ('standalone' in navigator) && navigator.standalone;
-
-				// No mostrar si el usuario ya lo cerró esta sesión
-				var dismissed = sessionStorage.getItem('iosBannerDismissed');
-
-				if (isIos && !isStandalone && !dismissed) {
-					banner.style.display = 'block';
-				}
-
-				// Botón cerrar
-				var btn = banner.querySelector('button');
-				if (btn) {
-					btn.addEventListener('click', function() {
-						banner.style.display = 'none';
-						sessionStorage.setItem('iosBannerDismissed', '1');
-					});
-				}
-			});
-		</script>
 		
 
-			<!-- START Turismo App REVOLUTION SLIDER 6.6.20 --><p class="rs-p-wp-fix"></p>
-			<rs-module-wrap id="rev_slider_19_1_wrapper" data-alias="valle-viejo-turismo" data-source="gallery" style="visibility:hidden;background:transparent;padding:0;">
-				<rs-module id="rev_slider_19_1" style="" data-version="6.6.20">
+			<!-- START Turismo App 2026 REVOLUTION SLIDER 6.6.20 --><p class="rs-p-wp-fix"></p>
+			<rs-module-wrap id="rev_slider_36_1_wrapper" data-alias="turismo-app-2026" data-source="gallery" style="visibility:hidden;background:transparent;padding:0;">
+				<rs-module id="rev_slider_36_1" style="" data-version="6.6.20">
 					<rs-slides style="overflow: hidden; position: absolute;">
-						<rs-slide style="position: absolute;" data-key="rs-56" data-title="Inicio" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-136" data-title="Inicio" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Inicio" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-56-layer-0" 
+								id="slider-36-slide-136-layer-0" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="y:-4px;"
+								data-xy="x:c;y:-4px;"
 								data-text="w:normal;"
-								data-dim="w:1079px;h:1629px;"
+								data-dim="w:1080px;h:1626px;"
 								data-frame_0="y:top;"
 								data-frame_1="st:200;sp:1000;sR:200;"
 								data-frame_999="o:0;st:w;sR:7800;"
 								style="z-index:6;"
-							><img src="assets/fondoinicionuevo.jpg" alt="" class="tp-rs-img" width="1079" height="1629" data-no-retina> 
+							><img src="assets/fondoinicio.jpg" alt="" class="tp-rs-img" width="1080" height="1626" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-1" 
+								id="slider-36-slide-136-layer-1" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:835px;"
+								data-xy="x:c;y:782px;"
 								data-text="w:normal;"
-								data-dim="w:517px;h:112px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-57;||o:click;a:playvideo;layer:slider-19-slide-56-layer-9;'
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-135;||o:click;a:playvideo;layer:slider-36-slide-136-layer-9;'
 								data-frame_0="y:top;"
 								data-frame_1="st:1740;sp:1000;sR:1740;"
 								data-frame_999="o:0;st:w;sR:6260;"
 								style="z-index:13;"
-							><img src="assets/btn-turismo-2.png" alt="" class="tp-rs-img" width="517" height="112" data-no-retina> 
+							><img src="assets/btn-turismo.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-2" 
+								id="slider-36-slide-136-layer-2" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:674px;"
+								data-xy="x:c;y:621px;"
 								data-text="w:normal;"
-								data-dim="w:517px;h:112px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-56-layer-9;||o:click;a:jumptoslide;slide:rs-73;'
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-136-layer-9;||o:click;a:jumptoslide;slide:rs-149;'
 								data-frame_0="y:top;"
 								data-frame_1="st:2060;sp:1000;sR:2060;"
 								data-frame_999="o:0;st:w;sR:5940;"
 								style="z-index:14;"
-							><img src="assets/btn-portezuelo.png" alt="" class="tp-rs-img" width="517" height="112" data-no-retina> 
+							><img src="assets/btn-portezuelo.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-3" 
+								id="slider-36-slide-136-layer-3" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:111px;y:1734px;"
@@ -253,11 +195,11 @@
 								data-frame_1="st:2300;sp:1000;sR:2300;"
 								data-frame_999="o:0;st:w;sR:5700;"
 								style="z-index:9;"
-							><img src="assets/IMG_8365-1.png" alt="" class="tp-rs-img" width="2452" height="580" data-no-retina> 
+							><img src="assets/secretariaturismo.png" alt="" class="tp-rs-img" width="355" height="84" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-4" 
+								id="slider-36-slide-136-layer-4" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;xo:218px;y:1731px;"
@@ -271,7 +213,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-5" 
+								id="slider-36-slide-136-layer-5" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1697px;"
@@ -285,37 +227,37 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-6" 
+								id="slider-36-slide-136-layer-6" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:1164px;"
+								data-xy="x:c;y:1111px;"
 								data-text="w:normal;"
-								data-dim="w:517px;h:112px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-56-layer-9;||o:click;a:jumptoslide;slide:rs-72;'
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-136-layer-9;||o:click;a:jumptoslide;slide:rs-150;'
 								data-frame_0="y:top;"
 								data-frame_1="st:1090;sp:1000;sR:1090;"
 								data-frame_999="o:0;st:w;sR:6910;"
 								style="z-index:11;"
-							><img src="assets/btn-gastronomia-2.png" alt="" class="tp-rs-img" width="517" height="112" data-no-retina> 
+							><img src="assets/btn-gastronomia.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-7" 
+								id="slider-36-slide-136-layer-7" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:997px;"
+								data-xy="x:c;y:944px;"
 								data-text="w:normal;"
-								data-dim="w:517px;h:112px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-56-layer-9;||o:click;a:jumptoslide;slide:rs-63;'
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-136-layer-9;||o:click;a:jumptoslide;slide:rs-137;'
 								data-frame_0="y:top;"
 								data-frame_1="st:1410;sp:1000;sR:1410;"
 								data-frame_999="o:0;st:w;sR:6590;"
 								style="z-index:12;"
-							><img src="assets/btn-hospedaje-2.png" alt="" class="tp-rs-img" width="517" height="112" data-no-retina> 
+							><img src="assets/btn-hospedaje.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-9" 
+								id="slider-36-slide-136-layer-9" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -330,53 +272,56 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-10" 
+								id="slider-36-slide-136-layer-10" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;xo:-8px;y:124px;"
+								data-xy="x:c;xo:-8px;y:159px;"
 								data-text="w:normal;"
 								data-dim="w:831px;h:416px;"
 								data-frame_0="y:top;"
 								data-frame_1="st:2400;sp:1000;sR:2400;"
 								data-frame_999="o:0;st:w;sR:5600;"
+								data-tloop="u:true;"
+								data-loop_999="sX:1.1;sY:1.1;sp:5000;e:power0.in;yys:t;yyf:t;"
 								style="z-index:15;"
 							><img src="assets/titulovertical2.png" alt="" class="tp-rs-img" width="808" height="404" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-56-layer-35" 
+								id="slider-36-slide-136-layer-37" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:1331px;"
+								data-xy="x:748px;y:28px;"
 								data-text="w:normal;"
-								data-dim="w:517px;h:112px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-56-layer-9;||o:click;a:jumptoslide;slide:rs-75;'
-								data-frame_0="y:top;"
-								data-frame_1="st:810;sp:1000;sR:810;"
-								data-frame_999="o:0;st:w;sR:7190;"
-								style="z-index:10;"
-							><img src="assets/btn-ultra.png" alt="" class="tp-rs-img" width="517" height="112" data-no-retina> 
+								data-dim="w:316px;h:178px;"
+								data-frame_0="x:100%;skX:-45;"
+								data-frame_1="st:3470;sp:1000;sR:3470;"
+								data-frame_999="o:0;st:w;sR:4530;"
+								data-loop_0="y:-10;"
+								data-loop_999="y:10;sp:2000;e:sine.inOut;yym:t;"
+								style="z-index:17;"
+							><img src="assets/condorfit2026.png" alt="" class="tp-rs-img" width="1671" height="941" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-72" data-title="Gastronomia 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-150" data-title="Gastronomia 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Gastronomia 1" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-72-layer-0" 
+								id="slider-36-slide-150-layer-0" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:-4px;"
 								data-text="w:normal;"
-								data-dim="w:1079px;h:1629px;"
+								data-dim="w:1080px;h:1629px;"
 								data-frame_0="y:top;"
 								data-frame_1="st:200;sp:1000;sR:200;"
 								data-frame_999="o:0;st:w;sR:7800;"
 								style="z-index:6;"
-							><img src="assets/fondogastronomia.jpg" alt="" class="tp-rs-img" width="1079" height="1629" data-no-retina> 
+							><img src="assets/gastronomiafondo.jpg" alt="" class="tp-rs-img" width="1080" height="1629" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-9" 
+								id="slider-36-slide-150-layer-9" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -391,7 +336,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-10" 
+								id="slider-36-slide-150-layer-10" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:75px;"
@@ -405,7 +350,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-11" 
+								id="slider-36-slide-150-layer-11" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:396px;"
@@ -419,7 +364,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-12" 
+								id="slider-36-slide-150-layer-12" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:556px;"
@@ -433,7 +378,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-23" 
+								id="slider-36-slide-150-layer-23" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:716px;"
@@ -447,7 +392,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-24" 
+								id="slider-36-slide-150-layer-24" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:877px;"
@@ -461,7 +406,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-25" 
+								id="slider-36-slide-150-layer-25" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1037px;"
@@ -475,7 +420,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-26" 
+								id="slider-36-slide-150-layer-26" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1200px;"
@@ -489,7 +434,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-28" 
+								id="slider-36-slide-150-layer-28" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1363px;"
@@ -503,13 +448,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-29" 
+								id="slider-36-slide-150-layer-29" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1728px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-72-layer-9;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-150-layer-9;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1090;sp:1000;sR:1090;"
 								data-frame_999="o:0;st:w;sR:6910;"
@@ -518,13 +463,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-72-layer-30" 
+								id="slider-36-slide-150-layer-30" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:727px;y:1728px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-71;||o:click;a:playvideo;layer:slider-19-slide-72-layer-9;'
+								data-actions='o:click;a:jumptoslide;slide:rs-148;||o:click;a:playvideo;layer:slider-36-slide-150-layer-9;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1670;sp:1000;sR:1670;"
 								data-frame_999="o:0;st:w;sR:6330;"
@@ -532,25 +477,25 @@
 							><img src="assets/btn-siguiente-2.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-71" data-title="Gastronomia 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-148" data-title="Gastronomia 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Gastronomia 2" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-71-layer-0" 
+								id="slider-36-slide-148-layer-0" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:-4px;"
 								data-text="w:normal;"
-								data-dim="w:1079px;h:1629px;"
+								data-dim="w:1080px;h:1629px;"
 								data-frame_0="y:top;"
 								data-frame_1="st:200;sp:1000;sR:200;"
 								data-frame_999="o:0;st:w;sR:7800;"
 								style="z-index:6;"
-							><img src="assets/fondogastronomia.jpg" alt="" class="tp-rs-img" width="1079" height="1629" data-no-retina> 
+							><img src="assets/gastronomiafondo.jpg" alt="" class="tp-rs-img" width="1080" height="1629" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-9" 
+								id="slider-36-slide-148-layer-9" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -565,7 +510,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-10" 
+								id="slider-36-slide-148-layer-10" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:75px;"
@@ -579,7 +524,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-11" 
+								id="slider-36-slide-148-layer-11" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:396px;"
@@ -593,7 +538,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-12" 
+								id="slider-36-slide-148-layer-12" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:556px;"
@@ -607,7 +552,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-23" 
+								id="slider-36-slide-148-layer-23" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:716px;"
@@ -621,7 +566,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-24" 
+								id="slider-36-slide-148-layer-24" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:877px;"
@@ -635,7 +580,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-25" 
+								id="slider-36-slide-148-layer-25" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1037px;"
@@ -649,7 +594,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-26" 
+								id="slider-36-slide-148-layer-26" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1200px;"
@@ -663,7 +608,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-28" 
+								id="slider-36-slide-148-layer-28" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1363px;"
@@ -677,13 +622,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-29" 
+								id="slider-36-slide-148-layer-29" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:1728px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-71-layer-9;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-148-layer-9;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1090;sp:1000;sR:1090;"
 								data-frame_999="o:0;st:w;sR:6910;"
@@ -692,13 +637,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-71-layer-31" 
+								id="slider-36-slide-148-layer-31" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:41px;y:1728px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-72;||o:click;a:playvideo;layer:slider-19-slide-71-layer-9;'
+								data-actions='o:click;a:jumptoslide;slide:rs-150;||o:click;a:playvideo;layer:slider-36-slide-148-layer-9;'
 								data-frame_0="x:left;"
 								data-frame_1="st:600;sp:1000;sR:600;"
 								data-frame_999="o:0;st:w;sR:7400;"
@@ -706,11 +651,11 @@
 							><img src="assets/btn-volver-3.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-57" data-title="Turismo 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-135" data-title="Turismo 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 1" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-57-layer-13" 
+								id="slider-36-slide-135-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -724,7 +669,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-14" 
+								id="slider-36-slide-135-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-30px;"
@@ -738,7 +683,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-15" 
+								id="slider-36-slide-135-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -752,7 +697,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-16" 
+								id="slider-36-slide-135-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:842px;"
@@ -766,7 +711,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-17" 
+								id="slider-36-slide-135-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1382px;"
@@ -780,7 +725,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-18" 
+								id="slider-36-slide-135-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:542px;y:1336px;"
@@ -794,7 +739,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-19" 
+								id="slider-36-slide-135-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -809,13 +754,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-20" 
+								id="slider-36-slide-135-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-57-layer-19;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-135-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -824,13 +769,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-21" 
+								id="slider-36-slide-135-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-57-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-135-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -839,13 +784,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-57-layer-22" 
+								id="slider-36-slide-135-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-57-layer-19;||o:click;a:jumptoslide;slide:rs-58;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-135-layer-19;||o:click;a:jumptoslide;slide:rs-134;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -853,11 +798,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-58" data-title="Turismo 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-134" data-title="Turismo 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 2" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-58-layer-13" 
+								id="slider-36-slide-134-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -871,7 +816,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-14" 
+								id="slider-36-slide-134-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -881,11 +826,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/Captura-de-pantalla-2025-09-25-000758.png" alt="" class="tp-rs-img" width="1080" height="805" data-no-retina> 
+							><img src="assets/hosteriacuestadelportezuelo.jpg" alt="" class="tp-rs-img" width="1080" height="805" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-15" 
+								id="slider-36-slide-134-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -899,7 +844,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-16" 
+								id="slider-36-slide-134-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:815px;"
@@ -913,7 +858,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-17" 
+								id="slider-36-slide-134-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1382px;"
@@ -927,7 +872,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-18" 
+								id="slider-36-slide-134-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:554px;y:1362px;"
@@ -941,7 +886,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-19" 
+								id="slider-36-slide-134-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -956,13 +901,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-20" 
+								id="slider-36-slide-134-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-58-layer-19;||o:click;a:jumptoslide;slide:rs-57;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-134-layer-19;||o:click;a:jumptoslide;slide:rs-135;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -971,13 +916,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-21" 
+								id="slider-36-slide-134-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-58-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-134-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -986,13 +931,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-58-layer-22" 
+								id="slider-36-slide-134-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-58-layer-19;||o:click;a:jumptoslide;slide:rs-59;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-134-layer-19;||o:click;a:jumptoslide;slide:rs-133;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1000,11 +945,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-59" data-title="Turismo 3" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-133" data-title="Turismo 3" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 3" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-59-layer-13" 
+								id="slider-36-slide-133-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1018,7 +963,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-14" 
+								id="slider-36-slide-133-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1028,11 +973,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/Captura-de-pantalla-2025-09-25-002431.png" alt="" class="tp-rs-img" width="1080" height="871" data-no-retina> 
+							><img src="assets/ganjasonada.jpg" alt="" class="tp-rs-img" width="1080" height="871" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-15" 
+								id="slider-36-slide-133-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1046,7 +991,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-16" 
+								id="slider-36-slide-133-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:855px;"
@@ -1060,7 +1005,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-17" 
+								id="slider-36-slide-133-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1382px;"
@@ -1074,7 +1019,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-18" 
+								id="slider-36-slide-133-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:604px;y:1340px;"
@@ -1088,7 +1033,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-19" 
+								id="slider-36-slide-133-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1103,13 +1048,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-20" 
+								id="slider-36-slide-133-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-59-layer-19;||o:click;a:jumptoslide;slide:rs-58;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-133-layer-19;||o:click;a:jumptoslide;slide:rs-134;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1118,13 +1063,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-21" 
+								id="slider-36-slide-133-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-59-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-133-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1133,13 +1078,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-59-layer-22" 
+								id="slider-36-slide-133-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-59-layer-19;||o:click;a:jumptoslide;slide:rs-60;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-133-layer-19;||o:click;a:jumptoslide;slide:rs-138;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1147,11 +1092,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-60" data-title="Turismo 4" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-138" data-title="Turismo 4" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 4" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-60-layer-13" 
+								id="slider-36-slide-138-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1165,7 +1110,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-14" 
+								id="slider-36-slide-138-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1175,11 +1120,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/418639450_397559889379846_6209428721234713383_n.png" alt="" class="tp-rs-img" width="1080" height="871" data-no-retina> 
+							><img src="assets/lastitas.jpg" alt="" class="tp-rs-img" width="1080" height="871" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-15" 
+								id="slider-36-slide-138-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1193,7 +1138,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-16" 
+								id="slider-36-slide-138-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:855px;"
@@ -1207,7 +1152,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-17" 
+								id="slider-36-slide-138-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1382px;"
@@ -1221,7 +1166,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-18" 
+								id="slider-36-slide-138-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:549px;y:1315px;"
@@ -1235,7 +1180,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-19" 
+								id="slider-36-slide-138-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1250,13 +1195,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-20" 
+								id="slider-36-slide-138-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-60-layer-19;||o:click;a:jumptoslide;slide:rs-59;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-138-layer-19;||o:click;a:jumptoslide;slide:rs-133;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1265,13 +1210,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-21" 
+								id="slider-36-slide-138-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-60-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-138-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1280,13 +1225,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-60-layer-22" 
+								id="slider-36-slide-138-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-60-layer-19;||o:click;a:jumptoslide;slide:rs-61;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-138-layer-19;||o:click;a:jumptoslide;slide:rs-139;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1294,11 +1239,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-61" data-title="Turismo 5" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-139" data-title="Turismo 5" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 5" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-61-layer-13" 
+								id="slider-36-slide-139-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1312,7 +1257,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-14" 
+								id="slider-36-slide-139-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1322,11 +1267,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/Captura-de-pantalla-2025-09-25-010219.png" alt="" class="tp-rs-img" width="1080" height="863" data-no-retina> 
+							><img src="assets/miradorcuestaportezuelo.jpg" alt="" class="tp-rs-img" width="1080" height="863" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-15" 
+								id="slider-36-slide-139-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1340,7 +1285,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-16" 
+								id="slider-36-slide-139-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:855px;"
@@ -1354,7 +1299,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-17" 
+								id="slider-36-slide-139-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1310px;"
@@ -1368,7 +1313,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-18" 
+								id="slider-36-slide-139-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:547px;y:1232px;"
@@ -1382,7 +1327,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-19" 
+								id="slider-36-slide-139-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1397,13 +1342,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-20" 
+								id="slider-36-slide-139-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-61-layer-19;||o:click;a:jumptoslide;slide:rs-60;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-139-layer-19;||o:click;a:jumptoslide;slide:rs-138;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1412,13 +1357,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-21" 
+								id="slider-36-slide-139-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-61-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-139-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1427,13 +1372,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-61-layer-22" 
+								id="slider-36-slide-139-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-61-layer-19;||o:click;a:jumptoslide;slide:rs-62;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-139-layer-19;||o:click;a:jumptoslide;slide:rs-140;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1441,11 +1386,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-62" data-title="Turismo 6" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-140" data-title="Turismo 6" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Turismo 6" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-62-layer-13" 
+								id="slider-36-slide-140-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1459,7 +1404,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-14" 
+								id="slider-36-slide-140-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-30px;"
@@ -1469,11 +1414,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/523403802_122143664174764747_4178424108247446410_n.png" alt="" class="tp-rs-img" width="1080" height="826" data-no-retina> 
+							><img src="assets/cineteatro.jpg" alt="" class="tp-rs-img" width="1080" height="826" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-15" 
+								id="slider-36-slide-140-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1487,7 +1432,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-16" 
+								id="slider-36-slide-140-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:842px;"
@@ -1501,7 +1446,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-17" 
+								id="slider-36-slide-140-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1382px;"
@@ -1515,7 +1460,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-18" 
+								id="slider-36-slide-140-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:553px;y:1274px;"
@@ -1529,7 +1474,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-19" 
+								id="slider-36-slide-140-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1544,13 +1489,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-20" 
+								id="slider-36-slide-140-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-62-layer-19;||o:click;a:jumptoslide;slide:rs-61;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-140-layer-19;||o:click;a:jumptoslide;slide:rs-139;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1559,13 +1504,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-21" 
+								id="slider-36-slide-140-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-62-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-140-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1574,13 +1519,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-62-layer-22" 
+								id="slider-36-slide-140-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-62-layer-19;||o:click;a:jumptoslide;slide:rs-57;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-140-layer-19;||o:click;a:jumptoslide;slide:rs-135;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1588,11 +1533,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-63" data-title="Hospedaje 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-137" data-title="Hospedaje 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 1" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-63-layer-13" 
+								id="slider-36-slide-137-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1606,7 +1551,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-14" 
+								id="slider-36-slide-137-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1616,11 +1561,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/Captura-de-pantalla-2025-09-25-000758.png" alt="" class="tp-rs-img" width="1080" height="805" data-no-retina> 
+							><img src="assets/hosteriacuestadelportezuelo.jpg" alt="" class="tp-rs-img" width="1080" height="805" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-15" 
+								id="slider-36-slide-137-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1634,7 +1579,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-16" 
+								id="slider-36-slide-137-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:815px;"
@@ -1648,7 +1593,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-17" 
+								id="slider-36-slide-137-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1478px;"
@@ -1662,7 +1607,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-18" 
+								id="slider-36-slide-137-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:554px;y:1362px;"
@@ -1676,7 +1621,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-19" 
+								id="slider-36-slide-137-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1691,13 +1636,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-20" 
+								id="slider-36-slide-137-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-63-layer-19;||o:click;a:jumptoslide;slide:rs-70;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-137-layer-19;||o:click;a:jumptoslide;slide:rs-147;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1706,13 +1651,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-21" 
+								id="slider-36-slide-137-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-63-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-137-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1721,13 +1666,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-63-layer-22" 
+								id="slider-36-slide-137-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-63-layer-19;||o:click;a:jumptoslide;slide:rs-64;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-137-layer-19;||o:click;a:jumptoslide;slide:rs-141;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1735,11 +1680,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-64" data-title="Hospedaje 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-141" data-title="Hospedaje 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 2" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-64-layer-13" 
+								id="slider-36-slide-141-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1753,7 +1698,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-14" 
+								id="slider-36-slide-141-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1767,7 +1712,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-15" 
+								id="slider-36-slide-141-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1781,7 +1726,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-16" 
+								id="slider-36-slide-141-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:859px;"
@@ -1795,7 +1740,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-17" 
+								id="slider-36-slide-141-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:107px;y:1464px;"
@@ -1809,7 +1754,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-18" 
+								id="slider-36-slide-141-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:550px;y:1328px;"
@@ -1823,7 +1768,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-19" 
+								id="slider-36-slide-141-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1838,13 +1783,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-20" 
+								id="slider-36-slide-141-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-64-layer-19;||o:click;a:jumptoslide;slide:rs-63;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-141-layer-19;||o:click;a:jumptoslide;slide:rs-137;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -1853,13 +1798,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-21" 
+								id="slider-36-slide-141-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-64-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-141-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -1868,13 +1813,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-64-layer-22" 
+								id="slider-36-slide-141-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-64-layer-19;||o:click;a:jumptoslide;slide:rs-65;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-141-layer-19;||o:click;a:jumptoslide;slide:rs-142;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -1882,11 +1827,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-65" data-title="Hospedaje 3" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-142" data-title="Hospedaje 3" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 3" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-65-layer-13" 
+								id="slider-36-slide-142-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -1900,7 +1845,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-14" 
+								id="slider-36-slide-142-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -1910,11 +1855,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/P1020112-800x600-1.png" alt="" class="tp-rs-img" width="1080" height="899" data-no-retina> 
+							><img src="assets/cabanasvallelabrador.jpg" alt="" class="tp-rs-img" width="1080" height="899" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-15" 
+								id="slider-36-slide-142-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -1928,7 +1873,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-16" 
+								id="slider-36-slide-142-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:886px;"
@@ -1942,7 +1887,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-17" 
+								id="slider-36-slide-142-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1478px;"
@@ -1956,7 +1901,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-18" 
+								id="slider-36-slide-142-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:549px;y:1299px;"
@@ -1970,7 +1915,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-19" 
+								id="slider-36-slide-142-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -1985,13 +1930,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-20" 
+								id="slider-36-slide-142-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-65-layer-19;||o:click;a:jumptoslide;slide:rs-64;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-142-layer-19;||o:click;a:jumptoslide;slide:rs-141;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2000,13 +1945,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-21" 
+								id="slider-36-slide-142-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-65-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-142-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2015,13 +1960,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-65-layer-22" 
+								id="slider-36-slide-142-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-65-layer-19;||o:click;a:jumptoslide;slide:rs-66;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-142-layer-19;||o:click;a:jumptoslide;slide:rs-143;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2029,11 +1974,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-66" data-title="Hospedaje 4" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-143" data-title="Hospedaje 4" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 4" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-66-layer-13" 
+								id="slider-36-slide-143-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -2047,7 +1992,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-14" 
+								id="slider-36-slide-143-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -2057,11 +2002,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/Finca-El-Recuerdo-01.png" alt="" class="tp-rs-img" width="1080" height="827" data-no-retina> 
+							><img src="assets/cabanasfincarecuerdo.jpg" alt="" class="tp-rs-img" width="1080" height="827" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-15" 
+								id="slider-36-slide-143-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -2075,7 +2020,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-16" 
+								id="slider-36-slide-143-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:895px;"
@@ -2089,7 +2034,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-17" 
+								id="slider-36-slide-143-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1470px;"
@@ -2103,7 +2048,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-18" 
+								id="slider-36-slide-143-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:496px;y:1291px;"
@@ -2117,7 +2062,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-19" 
+								id="slider-36-slide-143-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2132,13 +2077,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-20" 
+								id="slider-36-slide-143-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-66-layer-19;||o:click;a:jumptoslide;slide:rs-65;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-143-layer-19;||o:click;a:jumptoslide;slide:rs-142;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2147,13 +2092,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-21" 
+								id="slider-36-slide-143-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-66-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-143-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2162,13 +2107,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-66-layer-22" 
+								id="slider-36-slide-143-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-66-layer-19;||o:click;a:jumptoslide;slide:rs-67;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-143-layer-19;||o:click;a:jumptoslide;slide:rs-144;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2176,11 +2121,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-67" data-title="Hospedaje 5" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-144" data-title="Hospedaje 5" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 5" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-67-layer-13" 
+								id="slider-36-slide-144-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -2194,7 +2139,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-14" 
+								id="slider-36-slide-144-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -2204,11 +2149,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/472396036_18158640451336608_5993213295517666639_n.png" alt="" class="tp-rs-img" width="1080" height="829" data-no-retina> 
+							><img src="assets/cabanasvallehermoso.jpg" alt="" class="tp-rs-img" width="1080" height="829" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-15" 
+								id="slider-36-slide-144-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -2222,7 +2167,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-16" 
+								id="slider-36-slide-144-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:845px;"
@@ -2236,7 +2181,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-17" 
+								id="slider-36-slide-144-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1473px;"
@@ -2250,7 +2195,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-18" 
+								id="slider-36-slide-144-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:506px;y:1286px;"
@@ -2264,7 +2209,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-19" 
+								id="slider-36-slide-144-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2279,13 +2224,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-20" 
+								id="slider-36-slide-144-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-67-layer-19;||o:click;a:jumptoslide;slide:rs-66;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-144-layer-19;||o:click;a:jumptoslide;slide:rs-143;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2294,13 +2239,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-21" 
+								id="slider-36-slide-144-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-67-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-144-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2309,13 +2254,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-67-layer-22" 
+								id="slider-36-slide-144-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-67-layer-19;||o:click;a:jumptoslide;slide:rs-68;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-144-layer-19;||o:click;a:jumptoslide;slide:rs-145;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2323,11 +2268,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-68" data-title="Hospedaje 6" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-145" data-title="Hospedaje 6" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 6" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-68-layer-13" 
+								id="slider-36-slide-145-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -2341,7 +2286,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-14" 
+								id="slider-36-slide-145-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -2351,11 +2296,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/468303810_122139996962346318_7853977399585053258_n.png" alt="" class="tp-rs-img" width="1080" height="797" data-no-retina> 
+							><img src="assets/cabanasquintaruedas.jpg" alt="" class="tp-rs-img" width="1080" height="797" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-15" 
+								id="slider-36-slide-145-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -2369,7 +2314,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-16" 
+								id="slider-36-slide-145-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:854px;"
@@ -2383,7 +2328,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-17" 
+								id="slider-36-slide-145-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:102px;y:1478px;"
@@ -2397,7 +2342,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-18" 
+								id="slider-36-slide-145-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:510px;y:1296px;"
@@ -2411,7 +2356,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-19" 
+								id="slider-36-slide-145-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2426,13 +2371,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-20" 
+								id="slider-36-slide-145-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-68-layer-19;||o:click;a:jumptoslide;slide:rs-67;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-145-layer-19;||o:click;a:jumptoslide;slide:rs-144;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2441,13 +2386,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-21" 
+								id="slider-36-slide-145-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-68-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-145-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2456,13 +2401,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-68-layer-22" 
+								id="slider-36-slide-145-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-68-layer-19;||o:click;a:jumptoslide;slide:rs-69;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-145-layer-19;||o:click;a:jumptoslide;slide:rs-146;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2470,11 +2415,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-69" data-title="Hospedaje 7" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-146" data-title="Hospedaje 7" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 7" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-69-layer-13" 
+								id="slider-36-slide-146-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -2488,7 +2433,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-14" 
+								id="slider-36-slide-146-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -2498,11 +2443,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/DSC03889-Copiar.png" alt="" class="tp-rs-img" width="1080" height="873" data-no-retina> 
+							><img src="assets/elaqui.jpg" alt="" class="tp-rs-img" width="1080" height="873" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-15" 
+								id="slider-36-slide-146-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -2516,7 +2461,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-16" 
+								id="slider-36-slide-146-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:869px;"
@@ -2530,7 +2475,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-17" 
+								id="slider-36-slide-146-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:112px;y:1455px;"
@@ -2544,7 +2489,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-18" 
+								id="slider-36-slide-146-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:528px;y:1298px;"
@@ -2558,7 +2503,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-19" 
+								id="slider-36-slide-146-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2573,13 +2518,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-20" 
+								id="slider-36-slide-146-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-69-layer-19;||o:click;a:jumptoslide;slide:rs-68;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-146-layer-19;||o:click;a:jumptoslide;slide:rs-145;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2588,13 +2533,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-21" 
+								id="slider-36-slide-146-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-69-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-146-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2603,13 +2548,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-69-layer-22" 
+								id="slider-36-slide-146-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-69-layer-19;||o:click;a:jumptoslide;slide:rs-70;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-146-layer-19;||o:click;a:jumptoslide;slide:rs-147;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2617,11 +2562,11 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-70" data-title="Hospedaje 8" data-ssop="true" data-in="o:0;" data-out="a:false;">
+						<rs-slide style="position: absolute;" data-key="rs-147" data-title="Hospedaje 8" data-ssop="true" data-in="o:0;" data-out="a:false;">
 							<img src="assets/transparent.png" alt="Hospedaje 8" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-70-layer-13" 
+								id="slider-36-slide-147-layer-13" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:1px;y:684px;"
@@ -2635,7 +2580,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-14" 
+								id="slider-36-slide-147-layer-14" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="y:-2px;"
@@ -2645,11 +2590,11 @@
 								data-frame_1="st:490;sp:1000;sR:490;"
 								data-frame_999="o:0;st:w;sR:7510;"
 								style="z-index:6;"
-							><img src="assets/325234874_929121894740096_3722934829445051122_n.png" alt="" class="tp-rs-img" width="1080" height="824" data-no-retina> 
+							><img src="assets/acequiaadobe.jpg" alt="" class="tp-rs-img" width="1080" height="824" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-15" 
+								id="slider-36-slide-147-layer-15" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:30px;y:622px;"
@@ -2663,7 +2608,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-16" 
+								id="slider-36-slide-147-layer-16" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:c;y:848px;"
@@ -2677,7 +2622,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-17" 
+								id="slider-36-slide-147-layer-17" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:107px;y:1476px;"
@@ -2691,7 +2636,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-18" 
+								id="slider-36-slide-147-layer-18" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:502px;y:1306px;"
@@ -2705,7 +2650,7 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-19" 
+								id="slider-36-slide-147-layer-19" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2720,13 +2665,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-20" 
+								id="slider-36-slide-147-layer-20" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:42px;y:1744px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-70-layer-19;||o:click;a:jumptoslide;slide:rs-69;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-147-layer-19;||o:click;a:jumptoslide;slide:rs-146;'
 								data-frame_0="x:left;"
 								data-frame_1="st:570;sp:1000;sR:570;"
 								data-frame_999="o:0;st:w;sR:7430;"
@@ -2735,13 +2680,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-21" 
+								id="slider-36-slide-147-layer-21" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:379px;y:1740px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-70-layer-19;'
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-147-layer-19;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1060;sp:1000;sR:1060;"
 								data-frame_999="o:0;st:w;sR:6940;"
@@ -2750,13 +2695,13 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-70-layer-22" 
+								id="slider-36-slide-147-layer-22" 
 								data-type="image"
 								data-rsp_ch="on"
 								data-xy="x:718px;y:1737px;"
 								data-text="w:normal;"
 								data-dim="w:308px;h:91px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-70-layer-19;||o:click;a:jumptoslide;slide:rs-63;'
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-147-layer-19;||o:click;a:jumptoslide;slide:rs-137;'
 								data-frame_0="x:left;"
 								data-frame_1="st:1770;sp:1000;sR:1770;"
 								data-frame_999="o:0;st:w;sR:6230;"
@@ -2764,25 +2709,214 @@
 							><img src="assets/btn-siguiente-1.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-73" data-title="Portezuelo 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
-							<img src="assets/transparent.png" alt="Portezuelo 1" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
+						<rs-slide style="position: absolute;" data-key="rs-149" data-title="Portezuelo inicio" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelofondo.jpg" alt="" title="portezuelofondo" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
 <!--
 							--><rs-layer
-								id="slider-19-slide-73-layer-8" 
+								id="slider-36-slide-149-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-149-layer-46" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:126px;y:1740px;"
+								data-xy="x:c;y:327px;"
 								data-text="w:normal;"
-								data-dim="w:161px;h:103px;"
-								data-frame_0="y:50;"
-								data-frame_1="st:880;sp:1000;sR:880;"
-								data-frame_999="o:0;st:w;sR:7120;"
+								data-dim="w:604px;h:306px;"
+								data-frame_0="y:200%;sX:2;sY:2;o:1;rX:-20deg;rY:-20deg;"
+								data-frame_1="e:power3.out;st:110;sp:1000;sR:110;"
+								data-frame_999="o:0;st:w;sR:7890;"
+								style="z-index:7;"
+							><img src="assets/logonuevo.png" alt="" class="tp-rs-img" width="604" height="306" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-149-layer-47" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:1117px;"
+								data-text="w:normal;"
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-149-layer-9;||o:click;a:jumptoslide;slide:rs-155;'
+								data-frame_0="x:left;"
+								data-frame_1="st:960;sp:1000;sR:960;"
+								data-frame_999="o:0;st:w;sR:7040;"
+								style="z-index:9;"
+							><img src="assets/btn-fotos.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-149-layer-48" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:801px;"
+								data-text="w:normal;"
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-153;||o:click;a:playvideo;layer:slider-36-slide-149-layer-9;'
+								data-frame_0="x:left;"
+								data-frame_1="st:420;sp:1000;sR:420;"
+								data-frame_999="o:0;st:w;sR:7580;"
+								style="z-index:11;"
+							><img src="assets/btn-Horarios.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-149-layer-49" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:953px;"
+								data-text="w:normal;"
+								data-dim="w:547px;h:142px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-149-layer-9;||o:click;a:jumptoslide;slide:rs-154;'
+								data-frame_0="x:left;"
+								data-frame_1="st:670;sp:1000;sR:670;"
+								data-frame_999="o:0;st:w;sR:7330;"
 								style="z-index:10;"
-							><img src="assets/Valle-Viejo-Ciudad-Positivo3-1.png" alt="" class="tp-rs-img" width="252" height="161" data-no-retina> 
+							><img src="assets/btn-reservas.png" alt="" class="tp-rs-img" width="547" height="142" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-73-layer-9" 
+								id="slider-36-slide-149-layer-50" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:1699px;"
+								data-text="w:normal;"
+								data-dim="w:438px;h:118px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-136;||o:click;a:playvideo;layer:slider-36-slide-149-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1510;sp:1000;sR:1510;"
+								data-frame_999="o:0;st:w;sR:6490;"
+								style="z-index:8;"
+							><img src="assets/btn-Volver.png" alt="" class="tp-rs-img" width="438" height="118" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-153" data-title="Portezuelo horarios" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/horarios.jpg" alt="" title="horarios" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-153-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:438px;h:118px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-153-layer-9;'
+								data-frame_0="y:100%;"
+								data-frame_1="e:power4.inOut;st:1150;sp:1200;sR:1150;"
+								data-frame_999="o:0;st:w;sR:6650;"
+								style="z-index:8;"
+							><img src="assets/volverchikito.png" alt="" class="tp-rs-img" width="438" height="118" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-153-layer-8" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:1496px;"
+								data-text="w:normal;"
+								data-dim="w:785px;h:161px;"
+								data-frame_0="rX:70deg;oZ:-50;"
+								data-frame_1="oZ:-50;e:power4.inOut;sp:1750;"
+								data-frame_999="o:0;st:w;sR:7250;"
+								data-loop_999="sX:1.1;sY:1.1;sp:4000;e:power0.in;yys:t;yyf:t;"
+								style="z-index:9;"
+							><img src="assets/horarioboton.png" alt="" class="tp-rs-img" width="785" height="161" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-153-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-154" data-title="Portezuelo resevas" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/reservas.jpg" alt="" title="reservas" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-154-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:438px;h:118px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-154-layer-9;'
+								data-frame_0="y:100%;"
+								data-frame_1="e:power4.inOut;st:1150;sp:1200;sR:1150;"
+								data-frame_999="o:0;st:w;sR:6650;"
+								style="z-index:8;"
+							><img src="assets/volverchikito.png" alt="" class="tp-rs-img" width="438" height="118" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-154-layer-8" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:1406px;"
+								data-text="w:normal;"
+								data-dim="w:785px;h:161px;"
+								data-frame_0="rX:70deg;oZ:-50;"
+								data-frame_1="oZ:-50;e:power4.inOut;sp:1750;"
+								data-frame_999="o:0;st:w;sR:7250;"
+								data-loop_999="sX:1.1;sY:1.1;sp:4000;e:power0.in;yys:t;yyf:t;"
+								style="z-index:9;"
+							><img src="assets/horarioboton.png" alt="" class="tp-rs-img" width="785" height="161" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-154-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-155" data-title="Portezuelo foto 1" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo1.jpg" alt="" title="portezuelo1" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-155-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-155-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:510;sp:1000;sR:510;"
+								data-frame_999="o:0;st:w;sR:7490;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-155-layer-9" 
 								class="rs-layer-audio rs-layer-hidden"
 								data-type="audio"
 								data-rsp_ch="on"
@@ -2797,247 +2931,411 @@
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-73-layer-27" 
+								id="slider-36-slide-155-layer-27" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;xo:-1px;y:c;yo:-1px;"
+								data-xy="x:706px;y:b;yo:86px;"
 								data-text="w:normal;"
-								data-dim="w:1080px;h:1920px;"
-								data-frame_999="o:0;st:w;sR:8700;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-156;||o:click;a:playvideo;layer:slider-36-slide-155-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1000;sp:1000;sR:1000;"
+								data-frame_999="o:0;st:w;sR:7000;"
 								style="z-index:7;"
-							><img src="assets/hosteriafondo-1.jpg" alt="" class="tp-rs-img" width="1080" height="1920" data-no-retina> 
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-73-layer-32" 
+								id="slider-36-slide-155-layer-32" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;xo:8px;y:883px;"
+								data-xy="x:74px;y:b;yo:86px;"
 								data-text="w:normal;"
-								data-dim="w:862px;h:545px;"
-								data-frame_1="e:power4.inOut;sp:1000;"
-								data-frame_999="o:0;st:w;sR:8000;"
-								style="z-index:8;"
-							><img src="assets/hosteriacuestaelportezuelo_1747415494_3633907010383874356_59484875998-1-copia.png" alt="" class="tp-rs-img" width="1024" height="648" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-73-layer-33" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;xo:-28px;y:b;yo:96px;"
-								data-text="w:normal;"
-								data-dim="w:234px;h:58px;"
-								data-frame_0="y:50;"
-								data-frame_1="st:1070;sp:1000;sR:1070;"
-								data-frame_999="o:0;st:w;sR:6930;"
-								style="z-index:11;"
-							><img src="assets/redes-1.png" alt="" class="tp-rs-img" width="262" height="65" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-73-layer-34" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:354px;y:322px;"
-								data-text="w:normal;"
-								data-dim="w:391px;h:198px;"
-								data-frame_0="x:100%;skX:-45;"
-								data-frame_1="st:320;sp:1000;sR:320;"
-								data-frame_999="o:0;st:w;sR:7680;"
-								style="z-index:9;"
-							><img src="assets/portezuelologo.png" alt="" class="tp-rs-img" width="2748" height="1393" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-73-layer-36" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;xo:310px;y:b;yo:92px;"
-								data-text="w:normal;"
-								data-dim="w:249px;h:59px;"
-								data-frame_0="y:50;"
-								data-frame_1="st:1250;sp:1000;sR:1250;"
-								data-frame_999="o:0;st:w;sR:6750;"
-								style="z-index:12;"
-							><img src="assets/IMG_8365-1-1.png" alt="" class="tp-rs-img" width="2452" height="580" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-73-layer-38" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:b;yo:358px;"
-								data-text="w:normal;"
-								data-dim="w:518px;h:113px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-74;||o:click;a:playvideo;layer:slider-19-slide-73-layer-9;'
-								data-frame_0="y:100%;"
-								data-frame_1="e:power4.inOut;st:1770;sp:1200;sR:1770;"
-								data-frame_999="o:0;st:w;sR:6030;"
-								style="z-index:14;"
-							><img src="assets/horarios.png" alt="" class="tp-rs-img" width="518" height="113" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-73-layer-45" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:b;yo:210px;"
-								data-text="w:normal;"
-								data-dim="w:518px;h:113px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-56;||o:click;a:playvideo;layer:slider-19-slide-73-layer-9;'
-								data-frame_0="y:100%;"
-								data-frame_1="e:power4.inOut;st:1400;sp:1200;sR:1400;"
-								data-frame_999="o:0;st:w;sR:6400;"
-								style="z-index:13;"
-							><img src="assets/volverhosteria.png" alt="" class="tp-rs-img" width="518" height="113" data-no-retina> 
-							</rs-layer><!--
--->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-74" data-title="Portezuelo 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
-							<img src="assets/transparent.png" alt="Portezuelo 2" class="rev-slidebg tp-rs-img" data-bg="c:#ffffff;" data-no-retina>
-<!--
-							--><rs-layer
-								id="slider-19-slide-74-layer-1" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:b;yo:100px;"
-								data-text="w:normal;"
-								data-dim="w:518px;h:113px;"
-								data-actions='o:click;a:jumptoslide;slide:rs-73;||o:click;a:playvideo;layer:slider-19-slide-74-layer-9;'
-								data-frame_0="y:100%;"
-								data-frame_1="e:power4.inOut;st:1120;sp:1200;sR:1120;"
-								data-frame_999="o:0;st:w;sR:6680;"
-								style="z-index:8;"
-							><img src="assets/volverhosteria.png" alt="" class="tp-rs-img" width="518" height="113" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-74-layer-9" 
-								class="rs-layer-audio rs-layer-hidden"
-								data-type="audio"
-								data-rsp_ch="on"
-								data-xy="x:50px;y:50px;"
-								data-text="w:normal;"
-								data-dim="w:54;h:54;"
-								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
-								data-mp4="assets/pop.mp3"
-								data-frame_999="o:0;st:w;sR:8700;"
-								style="z-index:6;"
-							> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-74-layer-40" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:c;"
-								data-text="w:normal;"
-								data-dim="w:1080px;h:1920px;"
-								data-frame_999="o:0;st:w;sR:8700;"
-								style="z-index:7;"
-							><img src="assets/hosteriahorarios.jpg" alt="" class="tp-rs-img" width="1080" height="1920" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-74-layer-44" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:1314px;"
-								data-text="w:normal;"
-								data-dim="w:278px;h:339px;"
-								data-frame_0="y:100%;"
-								data-frame_1="e:power4.inOut;st:380;sp:1200;sR:380;"
-								data-frame_999="o:0;st:w;sR:7420;"
-								style="z-index:9;"
-							><img src="assets/Hosteria-1.png" alt="" class="tp-rs-img" width="1024" height="1247" data-no-retina> 
-							</rs-layer><!--
--->						</rs-slide>
-						<rs-slide style="position: absolute;" data-key="rs-75" data-title="Ultra Trail" data-ssop="true" data-in="o:0;" data-out="a:false;">
-							<img src="assets/transparent.png" alt="Ultra Trail" class="rev-slidebg tp-rs-img" data-bg="c:#024f00;" data-no-retina>
-<!--
-							--><rs-layer
-								id="slider-19-slide-75-layer-9" 
-								class="rs-layer-audio rs-layer-hidden"
-								data-type="audio"
-								data-rsp_ch="on"
-								data-xy="x:50px;y:50px;"
-								data-text="w:normal;"
-								data-dim="w:54;h:54;"
-								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
-								data-mp4="assets/pop.mp3"
-								data-frame_999="o:0;st:w;sR:8700;"
-								style="z-index:15;"
-							> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-75-layer-35" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:1752px;"
-								data-text="w:normal;"
-								data-dim="w:358px;h:106px;"
-								data-actions='o:click;a:playvideo;layer:slider-19-slide-75-layer-9;||o:click;a:jumptoslide;slide:rs-56;'
-								data-frame_0="x:left;"
-								data-frame_1="st:1540;sp:1000;sR:1540;"
-								data-frame_999="o:0;st:w;sR:6460;"
-								style="z-index:11;"
-							><img src="assets/btn-volver-3.png" alt="" class="tp-rs-img" width="308" height="91" data-no-retina> 
-							</rs-layer><!--
-
-							--><rs-layer
-								id="slider-19-slide-75-layer-39" 
-								data-type="image"
-								data-rsp_ch="on"
-								data-xy="x:c;y:104px;"
-								data-text="w:normal;"
-								data-dim="w:839px;h:325px;"
-								data-frame_0="x:left;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-161;||o:click;a:playvideo;layer:slider-36-slide-155-layer-9;'
+								data-frame_0="y:bottom;"
 								data-frame_1="sp:1000;"
 								data-frame_999="o:0;st:w;sR:8000;"
-								style="z-index:16;"
-							><img src="assets/logoultra.png" alt="" class="tp-rs-img" width="576" height="223" data-no-retina> 
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-156" data-title="Portezuelo foto 2" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo2.jpg" alt="" title="portezuelo2" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-156-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-156-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:540;sp:1000;sR:540;"
+								data-frame_999="o:0;st:w;sR:7460;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-75-layer-41" 
+								id="slider-36-slide-156-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-156-layer-27" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:459px;"
+								data-xy="x:706px;y:b;yo:86px;"
 								data-text="w:normal;"
-								data-dim="w:926px;h:381px;"
-								data-frame_0="x:left;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-156-layer-9;||o:click;a:jumptoslide;slide:rs-157;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1050;sp:1000;sR:1050;"
+								data-frame_999="o:0;st:w;sR:6950;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-156-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-155;||o:click;a:playvideo;layer:slider-36-slide-156-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-157" data-title="Portezuelo foto 3" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo3.jpg" alt="" title="portezuelo3" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-157-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-157-layer-9;'
+								data-frame_0="y:bottom;"
 								data-frame_1="st:520;sp:1000;sR:520;"
 								data-frame_999="o:0;st:w;sR:7480;"
-								style="z-index:17;"
-							><img src="assets/montanasultra.png" alt="" class="tp-rs-img" width="576" height="237" data-no-retina> 
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-75-layer-42" 
-								data-type="image"
+								id="slider-36-slide-157-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
 								data-rsp_ch="on"
-								data-xy="x:c;y:920px;"
+								data-xy="x:50px;y:50px;"
 								data-text="w:normal;"
-								data-dim="w:935px;h:286px;"
-								data-frame_0="x:left;"
-								data-frame_1="st:1010;sp:1000;sR:1010;"
-								data-frame_999="o:0;st:w;sR:6990;"
-								style="z-index:18;"
-							><img src="assets/textoultra.png" alt="" class="tp-rs-img" width="576" height="176" data-no-retina> 
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
 							</rs-layer><!--
 
 							--><rs-layer
-								id="slider-19-slide-75-layer-43" 
+								id="slider-36-slide-157-layer-27" 
 								data-type="image"
 								data-rsp_ch="on"
-								data-xy="x:c;y:1248px;"
+								data-xy="x:706px;y:b;yo:86px;"
 								data-text="w:normal;"
-								data-dim="w:326px;h:418px;"
-								data-frame_1="e:power4.inOut;st:2010;sp:1500;sR:2010;"
-								data-frame_999="o:0;st:w;sR:5490;"
-								style="z-index:19;"
-							><img src="assets/qrultra2.png" alt="" class="tp-rs-img" width="1024" height="1313" data-no-retina> 
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-157-layer-9;||o:click;a:jumptoslide;slide:rs-158;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1030;sp:1000;sR:1030;"
+								data-frame_999="o:0;st:w;sR:6970;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-157-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-157-layer-9;||o:click;a:jumptoslide;slide:rs-156;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-158" data-title="Portezuelo foto 4" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo4.jpg" alt="" title="portezuelo4" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-158-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-158-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:520;sp:1000;sR:520;"
+								data-frame_999="o:0;st:w;sR:7480;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-158-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-158-layer-27" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:706px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-158-layer-9;||o:click;a:jumptoslide;slide:rs-159;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1030;sp:1000;sR:1030;"
+								data-frame_999="o:0;st:w;sR:6970;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-158-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-158-layer-9;||o:click;a:jumptoslide;slide:rs-157;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-159" data-title="Portezuelo foto 5" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo5.jpg" alt="" title="portezuelo5" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-159-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-159-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:520;sp:1000;sR:520;"
+								data-frame_999="o:0;st:w;sR:7480;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-159-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-159-layer-27" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:706px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-159-layer-9;||o:click;a:jumptoslide;slide:rs-160;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1030;sp:1000;sR:1030;"
+								data-frame_999="o:0;st:w;sR:6970;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-159-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-159-layer-9;||o:click;a:jumptoslide;slide:rs-158;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-160" data-title="Portezuelo foto 6" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo6.jpg" alt="" title="portezuelo6" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-160-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-160-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:520;sp:1000;sR:520;"
+								data-frame_999="o:0;st:w;sR:7480;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-160-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-160-layer-27" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:706px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-160-layer-9;||o:click;a:jumptoslide;slide:rs-161;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1030;sp:1000;sR:1030;"
+								data-frame_999="o:0;st:w;sR:6970;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-160-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-160-layer-9;||o:click;a:jumptoslide;slide:rs-159;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+-->						</rs-slide>
+						<rs-slide style="position: absolute;" data-key="rs-161" data-title="Portezuelo foto 7" data-ssop="true" data-in="o:0;" data-out="a:false;">
+							<img src="assets/portezuelo7.jpg" alt="" title="portezuelo7" width="1080" height="1920" class="rev-slidebg tp-rs-img" data-bg="f:contain;" data-no-retina>
+<!--
+							--><rs-layer
+								id="slider-36-slide-161-layer-1" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:c;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:287px;h:106px;"
+								data-actions='o:click;a:jumptoslide;slide:rs-149;||o:click;a:playvideo;layer:slider-36-slide-161-layer-9;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:520;sp:1000;sR:520;"
+								data-frame_999="o:0;st:w;sR:7480;"
+								style="z-index:8;"
+							><img src="assets/btn-salir.png" alt="" class="tp-rs-img" width="287" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-161-layer-9" 
+								class="rs-layer-audio rs-layer-hidden"
+								data-type="audio"
+								data-rsp_ch="on"
+								data-xy="x:50px;y:50px;"
+								data-text="w:normal;"
+								data-dim="w:54;h:54;"
+								data-video="w:54;h:54;p:auto;ap:false;nse:false;l:false;vd:100;ptimer:false;"
+								data-mp4="assets/pop.mp3"
+								data-frame_999="o:0;st:w;sR:8700;"
+								style="z-index:6;"
+							> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-161-layer-27" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:706px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-161-layer-9;||o:click;a:jumptoslide;slide:rs-155;'
+								data-frame_0="y:bottom;"
+								data-frame_1="st:1030;sp:1000;sR:1030;"
+								data-frame_999="o:0;st:w;sR:6970;"
+								style="z-index:7;"
+							><img src="assets/btn-Siguiente.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
+							</rs-layer><!--
+
+							--><rs-layer
+								id="slider-36-slide-161-layer-32" 
+								data-type="image"
+								data-rsp_ch="on"
+								data-xy="x:74px;y:b;yo:86px;"
+								data-text="w:normal;"
+								data-dim="w:292px;h:106px;"
+								data-actions='o:click;a:playvideo;layer:slider-36-slide-161-layer-9;||o:click;a:jumptoslide;slide:rs-160;'
+								data-frame_0="y:bottom;"
+								data-frame_1="sp:1000;"
+								data-frame_999="o:0;st:w;sR:8000;"
+								style="z-index:9;"
+							><img src="assets/btn-Anterior.png" alt="" class="tp-rs-img" width="292" height="106" data-no-retina> 
 							</rs-layer><!--
 -->						</rs-slide>
 					</rs-slides>
@@ -3055,13 +3353,13 @@
 					var	tpj = jQuery;
 					if(window.RS_MODULES === undefined) window.RS_MODULES = {};
 					if(RS_MODULES.modules === undefined) RS_MODULES.modules = {};
-					RS_MODULES.modules["revslider191"] = {once: RS_MODULES.modules["revslider191"]!==undefined ? RS_MODULES.modules["revslider191"].once : undefined, init:function() {
-						window.revapi19 = window.revapi19===undefined || window.revapi19===null || window.revapi19.length===0  ? document.getElementById("rev_slider_19_1") : window.revapi19;
-						if(window.revapi19 === null || window.revapi19 === undefined || window.revapi19.length==0) { window.revapi19initTry = window.revapi19initTry ===undefined ? 0 : window.revapi19initTry+1; if (window.revapi19initTry<20) requestAnimationFrame(function() {RS_MODULES.modules["revslider191"].init()}); return;}
-						window.revapi19 = jQuery(window.revapi19);
-						if(window.revapi19.revolution==undefined){ revslider_showDoubleJqueryError("rev_slider_19_1"); return;}
-						revapi19.revolutionInit({
-								revapi:"revapi19",
+					RS_MODULES.modules["revslider361"] = {once: RS_MODULES.modules["revslider361"]!==undefined ? RS_MODULES.modules["revslider361"].once : undefined, init:function() {
+						window.revapi36 = window.revapi36===undefined || window.revapi36===null || window.revapi36.length===0  ? document.getElementById("rev_slider_36_1") : window.revapi36;
+						if(window.revapi36 === null || window.revapi36 === undefined || window.revapi36.length==0) { window.revapi36initTry = window.revapi36initTry ===undefined ? 0 : window.revapi36initTry+1; if (window.revapi36initTry<20) requestAnimationFrame(function() {RS_MODULES.modules["revslider361"].init()}); return;}
+						window.revapi36 = jQuery(window.revapi36);
+						if(window.revapi36.revolution==undefined){ revslider_showDoubleJqueryError("rev_slider_36_1"); return;}
+						revapi36.revolutionInit({
+								revapi:"revapi36",
 								DPR:"dpr",
 								sliderLayout:"fullscreen",
 								visibilityLevels:"1240,1024,778,480",
@@ -3089,21 +3387,6 @@
 					}} // End of RevInitScript
 					if (window.RS_MODULES.checkMinimal!==undefined) { window.RS_MODULES.checkMinimal();};
 				</script>
-<!-- PWA: Registro del Service Worker -->
-<script>
-if ('serviceWorker' in navigator) {
-window.addEventListener('load', function() {
-navigator.serviceWorker.register('./sw.js')
-.then(function(reg) {
-console.log('Valle Viejo SW registrado:', reg.scope);
-})
-.catch(function(err) {
-console.warn('SW no pudo registrarse:', err);
-});
-});
-}
-</script>
-
 
 
 
